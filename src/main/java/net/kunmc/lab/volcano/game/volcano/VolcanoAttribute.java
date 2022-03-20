@@ -1,7 +1,7 @@
 package net.kunmc.lab.volcano.game.volcano;
 
 import lombok.Getter;
-import lombok.Setter;
+import net.kunmc.lab.volcano.Volcano;
 
 /**
  * 火山の生成に必要な情報を保持するためのクラス
@@ -9,17 +9,16 @@ import lombok.Setter;
  */
 public class VolcanoAttribute {
 
+    @Getter
     private int pointX;
     @Getter
     private int pointY;
     @Getter
     private int pointZ;
     @Getter
-    @Setter
     private int currentMaxHeight;
     @Getter
     private String world;
-    @Getter
     private int growCnt;
 
 
@@ -35,26 +34,17 @@ public class VolcanoAttribute {
         this.pointZ = startZ;
         this.currentMaxHeight = 0;
         this.world = world;
-        this.growCnt = 0;
     }
 
     public void growVolcano() {
-        growCnt++;
-        if (growCnt > 400) {
-            growCnt = 0;
-            currentMaxHeight++;
-        }
+        currentMaxHeight += 1;
     }
 
     public int getMaxHeight() {
-        return 30;
+        return Volcano.getPlugin().config.volcanoHeight.value();
     }
 
     public int getMaxWeight() {
-        return 30;
-    }
-
-    public int getPointX() {
-        return pointX;
+        return Volcano.getPlugin().config.volcanoWeight.value();
     }
 }

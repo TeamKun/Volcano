@@ -6,7 +6,6 @@ import net.kunmc.lab.configlib.ConfigCommand;
 public class Main extends Command {
     public Main(ConfigCommand configCommand) {
         super(CommandConst.MAIN);
-
-        children(new Start(), new Stop(), new Pause(), configCommand);
+        children(new Start(), new Stop(), configCommand);
     }
 }
