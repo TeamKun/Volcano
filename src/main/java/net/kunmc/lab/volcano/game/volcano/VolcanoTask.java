@@ -12,12 +12,11 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
-import static net.kunmc.lab.volcano.util.Calc.getRangeMinValue;
-import static net.kunmc.lab.volcano.util.Calc.getRangeRandomValue;
+import static net.kunmc.lab.volcano.util.Calc.*;
 
 public class VolcanoTask {
 
-    private static List<VolcanoAttribute> volcanoList = new ArrayList();
+    public static List<VolcanoAttribute> volcanoList = new ArrayList();
     private static Map<String, Integer> hardenBlockList = new HashMap();
 
     private static BukkitTask addVolcanoTask;
@@ -28,6 +27,7 @@ public class VolcanoTask {
     private static Map<String, Integer> blockHardeningProb = new HashMap<>();
 
     private static final String OBSIDIAN = "OBSIDIAN";
+    private static final String MAGMA = "MAGMA";
     private static final String COBBLESTONE = "COBBLESTONE";
     private static final String IRON_ORE = "IRON_ORE";
     private static final String GOLD_ORE = "GOLD_ORE";
@@ -35,7 +35,8 @@ public class VolcanoTask {
     private static int blockHardeningSum = 0;
 
     static {
-        blockHardeningProb.put(OBSIDIAN, 80);
+        blockHardeningProb.put(OBSIDIAN, 70);
+        blockHardeningProb.put(MAGMA, 10);
         blockHardeningProb.put(COBBLESTONE, 10);
         blockHardeningProb.put(IRON_ORE, 5);
         blockHardeningProb.put(GOLD_ORE, 4);
@@ -52,26 +53,21 @@ public class VolcanoTask {
             public void run() {
                 // 火山作成
                 if (volcanoList.size() < Volcano.getPlugin().config.volcanoNum.value()) {
-                    Player player = Bukkit.getPlayer("POne0301");
-                    if (player == null) return;
+                    Object[] players = Bukkit.getOnlinePlayers().toArray();
+                    if (players.length == 0) return;
+                    Player player = (Player) players[random.nextInt(players.length)];
                     volcanoList.add(VolcanoCreator.createVolcano(player));
                 }
-
                 // 火山削除
                 ListIterator<VolcanoAttribute> volcanoIterator = volcanoList.listIterator();
                 while (volcanoIterator.hasNext()) {
                     VolcanoAttribute volcano = volcanoIterator.next();
-                    if (volcano.getCurrentMaxHeight() > Volcano.getPlugin().config.volcanoHeight.value()) {
-                        System.out.println("AAAA");
+                    if (volcano.getCurrentMaxHeight() > volcano.getMaxHeight()) {
                         volcanoIterator.remove();
                     }
                 }
             }
         }.runTaskTimer(Volcano.getPlugin(), 0, 5);
-    }
-
-    private static void removeVolcano(VolcanoAttribute volcano) {
-
     }
 
     public static void growVolcanoRunnable() {
@@ -141,6 +137,9 @@ public class VolcanoTask {
             case OBSIDIAN:
                 block.setType(Material.OBSIDIAN);
                 break;
+            case MAGMA:
+                block.setType(Material.MAGMA_BLOCK);
+                break;
             case IRON_ORE:
                 block.setType(Material.IRON_ORE);
                 break;
@@ -167,14 +166,14 @@ public class VolcanoTask {
 
         // 火山の高さが何割かを計算する(1-(最大の高さ-今の高さ)/最大の高さ))
         // 現在の高さの2/3の範囲でrandomな地点の座標を取得（MaxWeightを超えない値）
-        int startX = pointX + getRangeMinValue(getRangeRandomValue((volcano.getCurrentMaxHeight() * 1 / 3)), volcano.getMaxWeight());
-        int startZ = pointZ + getRangeMinValue(getRangeRandomValue((volcano.getCurrentMaxHeight() * 1 / 3)), volcano.getMaxWeight());
+        int startX = pointX + getRangeMinValue(getRangeRandomValue((volcano.getCurrentMaxHeight() / 2)), volcano.getMaxWeight());
+        int startZ = pointZ + getRangeMinValue(getRangeRandomValue((volcano.getCurrentMaxHeight() / 2)), volcano.getMaxWeight());
 
         // 溶岩の配置位置
         Location location = Bukkit.getWorld(volcano.getWorld()).getHighestBlockAt(startX, startZ).getLocation();
         location.add(0, 1, 0);
         location.getBlock().setType(Material.LAVA);
-        volcano.growVolcano();
+        //System.out.println(startX + " " + startZ + ": " + volcano.getPointX() + " " + volcano.getPointZ() + " " + volcano.getCurrentMaxHeight());
     }
 
     public static void startVolcanoTasks() {
@@ -194,6 +193,9 @@ public class VolcanoTask {
         growVolcanoTask = null;
         putLavaTask = null;
         hardenBlockTask = null;
+
+        volcanoList.clear();
+        hardenBlockList.clear();
     }
 
     public static void restartTask(String taskName) {

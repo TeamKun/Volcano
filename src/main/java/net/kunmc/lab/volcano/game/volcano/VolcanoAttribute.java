@@ -19,8 +19,6 @@ public class VolcanoAttribute {
     private int currentMaxHeight;
     @Getter
     private String world;
-    private int growCnt;
-
 
     /**
      * @param startX 開始地点

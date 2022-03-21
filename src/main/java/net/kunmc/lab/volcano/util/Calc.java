@@ -30,22 +30,10 @@ public class Calc {
      * @return
      */
     public static int getRangeMinValue(int value, int limitValue) {
-        if (value < 0) limitValue *= -1;
-        return Math.min(value, limitValue);
-    }
-
-    /**
-     * value(任意の整数)を目標地点(整数)に1近づけた値を返す
-     *
-     * @param value
-     * @param pointValue
-     * @return
-     */
-    public static int getNearPointValue(int value, int pointValue) {
-        if (value > pointValue) {
-            return value--;
+        if (value < 0) {
+            return Math.max(value, limitValue * -1);
         } else {
-            return value++;
+            return Math.min(value, limitValue);
         }
     }
 }
