@@ -100,7 +100,7 @@ public class VolcanoTask {
             public void run() {
                 List<String> removeList = new ArrayList<>();
                 for (String place : hardenBlockList.keySet()) {
-                    if (hardenBlockList.get(place) > 60) {
+                    if (hardenBlockList.get(place) > 45) {
                         transformBlock(getBlockFromPlace(place));
                         removeList.add(place);
                     } else {
@@ -166,8 +166,8 @@ public class VolcanoTask {
 
         // 火山の高さが何割かを計算する(1-(最大の高さ-今の高さ)/最大の高さ))
         // 現在の高さの2/3の範囲でrandomな地点の座標を取得（MaxWeightを超えない値）
-        int startX = pointX + getRangeMinValue(getRangeRandomValue((volcano.getCurrentMaxHeight() / 2)), volcano.getMaxWeight());
-        int startZ = pointZ + getRangeMinValue(getRangeRandomValue((volcano.getCurrentMaxHeight() / 2)), volcano.getMaxWeight());
+        int startX = pointX + getRangeMinValue(getRangeRandomValue((volcano.getCurrentMaxHeight() * 2 / 3)), volcano.getMaxWeight());
+        int startZ = pointZ + getRangeMinValue(getRangeRandomValue((volcano.getCurrentMaxHeight() * 2 / 3)), volcano.getMaxWeight());
 
         // 溶岩の配置位置
         Location location = Bukkit.getWorld(volcano.getWorld()).getHighestBlockAt(startX, startZ).getLocation();

@@ -41,7 +41,7 @@ dependencies {
     //compileOnly name: "patched_1.16.5"
 
     implementation "dev.kotx:flylib-reloaded:latest.release"
-    implementation 'com.github.TeamKun:ConfigLib:latest.release'
+    implementation 'com.github.TeamKun:ConfigLib:0.8.1'
 
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
