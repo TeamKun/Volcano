@@ -13,6 +13,7 @@ public class Start extends Command {
     public void execute(CommandContext ctx) {
         if (GameManager.isRunning()) {
             ctx.fail("既に開始しています");
+            return;
         }
 
         GameManager.controller(GameManager.GameMode.MODE_START);

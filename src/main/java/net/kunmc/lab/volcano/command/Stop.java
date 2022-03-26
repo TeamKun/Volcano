@@ -13,6 +13,7 @@ public class Stop extends Command {
     public void execute(CommandContext ctx) {
         if (!GameManager.isRunning()) {
             ctx.fail("開始されていません");
+            return;
         }
 
         GameManager.controller(GameManager.GameMode.MODE_NEUTRAL);

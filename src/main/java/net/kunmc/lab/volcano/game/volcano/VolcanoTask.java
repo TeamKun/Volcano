@@ -3,6 +3,7 @@ package net.kunmc.lab.volcano.game.volcano;
 import net.kunmc.lab.volcano.Volcano;
 import net.kunmc.lab.volcano.util.Calc;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -53,7 +54,7 @@ public class VolcanoTask {
             public void run() {
                 // 火山作成
                 if (volcanoList.size() < Volcano.getPlugin().config.volcanoNum.value()) {
-                    Object[] players = Bukkit.getOnlinePlayers().toArray();
+                    Object[] players = getTargetPlayers();
                     if (players.length == 0) return;
                     Player player = (Player) players[random.nextInt(players.length)];
                     volcanoList.add(VolcanoCreator.createVolcano(player));
@@ -120,6 +121,7 @@ public class VolcanoTask {
      * @param block
      */
     private static void transformBlock(Block block) {
+        //if (!block.getType().equals(Material.LAVA)) return;
         // 重み付け選択メモ
         // 抽選を行う -> 外れたら外れた対象がいなかったことにして再抽選
 
@@ -166,14 +168,13 @@ public class VolcanoTask {
 
         // 火山の高さが何割かを計算する(1-(最大の高さ-今の高さ)/最大の高さ))
         // 現在の高さの2/3の範囲でrandomな地点の座標を取得（MaxWeightを超えない値）
-        int startX = pointX + getRangeMinValue(getRangeRandomValue((volcano.getCurrentMaxHeight() * 2 / 3)), volcano.getMaxWeight());
-        int startZ = pointZ + getRangeMinValue(getRangeRandomValue((volcano.getCurrentMaxHeight() * 2 / 3)), volcano.getMaxWeight());
+        int startX = pointX + getRangeMinValue(getRangeRandomValue((volcano.getCurrentMaxHeight() / 2)), volcano.getMaxWeight());
+        int startZ = pointZ + getRangeMinValue(getRangeRandomValue((volcano.getCurrentMaxHeight() / 2)), volcano.getMaxWeight());
 
         // 溶岩の配置位置
         Location location = Bukkit.getWorld(volcano.getWorld()).getHighestBlockAt(startX, startZ).getLocation();
         location.add(0, 1, 0);
         location.getBlock().setType(Material.LAVA);
-        //System.out.println(startX + " " + startZ + ": " + volcano.getPointX() + " " + volcano.getPointZ() + " " + volcano.getCurrentMaxHeight());
     }
 
     public static void startVolcanoTasks() {
@@ -225,5 +226,9 @@ public class VolcanoTask {
     private static Block getBlockFromPlace(String place) {
         String[] placeInfo = place.split(" ");
         return Bukkit.getWorld(placeInfo[0]).getBlockAt(Integer.parseInt(placeInfo[1]), Integer.parseInt(placeInfo[2]), Integer.parseInt(placeInfo[3]));
+    }
+
+    private static Object[] getTargetPlayers() {
+        return Bukkit.getOnlinePlayers().stream().filter(x -> !x.getGameMode().equals(GameMode.SPECTATOR) && !x.getGameMode().equals(GameMode.CREATIVE)).toArray();
     }
 }
