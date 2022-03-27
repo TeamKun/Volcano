@@ -229,6 +229,8 @@ public class VolcanoTask {
     }
 
     private static Object[] getTargetPlayers() {
-        return Bukkit.getOnlinePlayers().stream().filter(x -> !x.getGameMode().equals(GameMode.SPECTATOR) && !x.getGameMode().equals(GameMode.CREATIVE)).toArray();
+        return Bukkit.getOnlinePlayers().stream().filter(x -> !x.getGameMode().equals(GameMode.SPECTATOR) &&
+                !x.getGameMode().equals(GameMode.CREATIVE) &&
+                !x.isDead()).toArray();
     }
 }
