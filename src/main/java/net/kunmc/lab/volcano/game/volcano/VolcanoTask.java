@@ -3,17 +3,16 @@ package net.kunmc.lab.volcano.game.volcano;
 import net.kunmc.lab.volcano.Volcano;
 import net.kunmc.lab.volcano.util.Calc;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
-import static net.kunmc.lab.volcano.util.Calc.*;
+import static net.kunmc.lab.volcano.util.Calc.getRangeMinValue;
+import static net.kunmc.lab.volcano.util.Calc.getRangeRandomValue;
 
 public class VolcanoTask {
 
@@ -54,10 +53,8 @@ public class VolcanoTask {
             public void run() {
                 // 火山作成
                 if (volcanoList.size() < Volcano.getPlugin().config.volcanoNum.value()) {
-                    Object[] players = getTargetPlayers();
-                    if (players.length == 0) return;
-                    Player player = (Player) players[random.nextInt(players.length)];
-                    volcanoList.add(VolcanoCreator.createVolcano(player));
+                    VolcanoAttribute volcano = VolcanoCreator.createVolcano();
+                    if (volcano != null) volcanoList.add(VolcanoCreator.createVolcano());
                 }
                 // 火山削除
                 ListIterator<VolcanoAttribute> volcanoIterator = volcanoList.listIterator();
@@ -226,11 +223,5 @@ public class VolcanoTask {
     private static Block getBlockFromPlace(String place) {
         String[] placeInfo = place.split(" ");
         return Bukkit.getWorld(placeInfo[0]).getBlockAt(Integer.parseInt(placeInfo[1]), Integer.parseInt(placeInfo[2]), Integer.parseInt(placeInfo[3]));
-    }
-
-    private static Object[] getTargetPlayers() {
-        return Bukkit.getOnlinePlayers().stream().filter(x -> !x.getGameMode().equals(GameMode.SPECTATOR) &&
-                !x.getGameMode().equals(GameMode.CREATIVE) &&
-                !x.isDead()).toArray();
     }
 }

@@ -1,7 +1,7 @@
 package net.kunmc.lab.volcano.command;
 
-import dev.kotx.flylib.command.Command;
-import dev.kotx.flylib.command.CommandContext;
+import net.kunmc.lab.commandlib.Command;
+import net.kunmc.lab.commandlib.CommandContext;
 import net.kunmc.lab.volcano.game.GameManager;
 
 public class Start extends Command {
@@ -12,11 +12,11 @@ public class Start extends Command {
     @Override
     public void execute(CommandContext ctx) {
         if (GameManager.isRunning()) {
-            ctx.fail("既に開始しています");
+            ctx.sendFailure("既に開始しています");
             return;
         }
 
         GameManager.controller(GameManager.GameMode.MODE_START);
-        ctx.success("開始しました");
+        ctx.sendSuccess("開始しました");
     }
 }

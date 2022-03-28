@@ -1,7 +1,7 @@
 package net.kunmc.lab.volcano;
 
-import dev.kotx.flylib.FlyLib;
 import lombok.Getter;
+import net.kunmc.lab.commandlib.CommandLib;
 import net.kunmc.lab.configlib.ConfigCommand;
 import net.kunmc.lab.configlib.ConfigCommandBuilder;
 import net.kunmc.lab.volcano.command.Main;
@@ -22,19 +22,13 @@ public final class Volcano extends JavaPlugin {
         plugin = this;
         // Config
         config = new Config(this);
-        config.saveConfigIfAbsent();
-        config.loadConfig();
 
         // Event
         getServer().getPluginManager().registerEvents(new VolcanoEventListener(), plugin);
 
         // Command
         ConfigCommand configCommand = new ConfigCommandBuilder(config).build();
-
-        FlyLib.create(this, builder -> {
-            builder.command(new Main(configCommand));
-        });
-
+        CommandLib.register(this, new Main(configCommand));
         ConfigListener.onModify();
     }
 
