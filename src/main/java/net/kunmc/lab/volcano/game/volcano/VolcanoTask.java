@@ -26,7 +26,7 @@ public class VolcanoTask {
 
     private static Map<String, Integer> blockHardeningProb = new HashMap<>();
 
-    private static final String OBSIDIAN = "OBSIDIAN";
+    private static final String BASALT = "BASALT";
     private static final String MAGMA = "MAGMA";
     private static final String COBBLESTONE = "COBBLESTONE";
     private static final String IRON_ORE = "IRON_ORE";
@@ -35,12 +35,12 @@ public class VolcanoTask {
     private static int blockHardeningSum = 0;
 
     static {
-        blockHardeningProb.put(OBSIDIAN, 70);
+        blockHardeningProb.put(BASALT, 50);
         blockHardeningProb.put(MAGMA, 10);
-        blockHardeningProb.put(COBBLESTONE, 10);
+        blockHardeningProb.put(COBBLESTONE, 30);
         blockHardeningProb.put(IRON_ORE, 5);
-        blockHardeningProb.put(GOLD_ORE, 4);
-        blockHardeningProb.put(DIAMOND_ORE, 1);
+        blockHardeningProb.put(GOLD_ORE, 3);
+        blockHardeningProb.put(DIAMOND_ORE, 2);
         // 前提として合計値を100%にしているが、あとから変更があっても対応できるように計算しておく
         for (int value : blockHardeningProb.values()) {
             blockHardeningSum += value;
@@ -76,7 +76,7 @@ public class VolcanoTask {
                     volcano.growVolcano();
                 }
             }
-        }.runTaskTimer(Volcano.getPlugin(), 0, Volcano.getPlugin().config.volcanoGrowTick.value());
+        }.runTaskTimer(Volcano.getPlugin(), 0, 60);
     }
 
     public static void putLavaRunnable() {
@@ -117,8 +117,7 @@ public class VolcanoTask {
      *
      * @param block
      */
-    private static void transformBlock(Block block) {
-        //if (!block.getType().equals(Material.LAVA)) return;
+    public static void transformBlock(Block block) {
         // 重み付け選択メモ
         // 抽選を行う -> 外れたら外れた対象がいなかったことにして再抽選
 
@@ -133,8 +132,8 @@ public class VolcanoTask {
         }
 
         switch (hardenBlock) {
-            case OBSIDIAN:
-                block.setType(Material.OBSIDIAN);
+            case BASALT:
+                block.setType(Material.BASALT);
                 break;
             case MAGMA:
                 block.setType(Material.MAGMA_BLOCK);
@@ -217,11 +216,15 @@ public class VolcanoTask {
 
     public static void addHardenBlockList(Location location) {
         String place = location.getWorld().getName() + " " + (int) location.getX() + " " + (int) location.getY() + " " + (int) location.getZ();
-        if (!hardenBlockList.containsKey(place)) hardenBlockList.put(place, 0);
+        if (!hardenBlockList.containsKey(place)) hardenBlockList.put(place, Calc.random.nextInt(10));
     }
 
     private static Block getBlockFromPlace(String place) {
         String[] placeInfo = place.split(" ");
         return Bukkit.getWorld(placeInfo[0]).getBlockAt(Integer.parseInt(placeInfo[1]), Integer.parseInt(placeInfo[2]), Integer.parseInt(placeInfo[3]));
+    }
+
+    public static boolean hasMaxHardenBlock() {
+        return hardenBlockList.size() > 1000;
     }
 }

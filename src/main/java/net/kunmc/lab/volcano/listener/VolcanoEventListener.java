@@ -28,7 +28,13 @@ public class VolcanoEventListener implements Listener {
             int pointX = event.getBlock().getX();
             int pointZ = event.getBlock().getZ();
             if (minWidthX <= pointX && pointX <= maxWidthX && minWidthZ <= pointZ && pointZ <= maxWidthZ) {
-                VolcanoTask.addHardenBlockList(event.getBlock().getLocation());
+                if (VolcanoTask.hasMaxHardenBlock()) {
+                    // 石化対象が多いと重くなるため、即時石化させる
+                    VolcanoTask.transformBlock(event.getBlock());
+                    VolcanoTask.transformBlock(event.getToBlock());
+                } else {
+                    VolcanoTask.addHardenBlockList(event.getBlock().getLocation());
+                }
             }
         }
     }

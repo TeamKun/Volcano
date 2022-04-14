@@ -2,7 +2,10 @@ package net.kunmc.lab.volcano.command;
 
 import net.kunmc.lab.commandlib.Command;
 import net.kunmc.lab.commandlib.CommandContext;
+import net.kunmc.lab.volcano.Volcano;
 import net.kunmc.lab.volcano.game.GameManager;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 public class Start extends Command {
     public Start() {
@@ -16,6 +19,11 @@ public class Start extends Command {
             return;
         }
 
+        // coordinateモードの初期値設定がされてなければコマンド実行者のplayerの位置を入れるようにする
+        Player player = Bukkit.getPlayer(ctx.getSender().getName());
+        if (Volcano.getPlugin().config.createVolcanoPointOnCoordinate.value() == null && player != null) {
+            Volcano.getPlugin().config.createVolcanoPointOnCoordinate.value(player.getLocation());
+        }
         GameManager.controller(GameManager.GameMode.MODE_START);
         ctx.sendSuccess("開始しました");
     }
