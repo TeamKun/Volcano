@@ -21,10 +21,10 @@ public class VolcanoEventListener implements Listener {
         if (!event.getBlock().getType().equals(Material.LAVA)) return;
 
         for (VolcanoAttribute volcano : VolcanoTask.volcanoList) {
-            int minWidthX = volcano.getPointX() - Volcano.getPlugin().config.volcanoWeight.value();
-            int maxWidthX = volcano.getPointX() + Volcano.getPlugin().config.volcanoWeight.value();
-            int minWidthZ = volcano.getPointZ() - Volcano.getPlugin().config.volcanoWeight.value();
-            int maxWidthZ = volcano.getPointZ() + Volcano.getPlugin().config.volcanoWeight.value();
+            int minWidthX = volcano.getPointX() - Volcano.getPlugin().config.volcanoWidth.value();
+            int maxWidthX = volcano.getPointX() + Volcano.getPlugin().config.volcanoWidth.value();
+            int minWidthZ = volcano.getPointZ() - Volcano.getPlugin().config.volcanoWidth.value();
+            int maxWidthZ = volcano.getPointZ() + Volcano.getPlugin().config.volcanoWidth.value();
             int pointX = event.getBlock().getX();
             int pointZ = event.getBlock().getZ();
             if (minWidthX <= pointX && pointX <= maxWidthX && minWidthZ <= pointZ && pointZ <= maxWidthZ) {

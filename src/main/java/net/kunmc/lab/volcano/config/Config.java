@@ -9,8 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class Config extends BaseConfig {
     public IntegerValue putLavaNum = new IntegerValue(6);
     public IntegerValue putLavaTick = new IntegerValue(150);
-    public IntegerValue volcanoHeight = new IntegerValue(40);
-    public IntegerValue volcanoWeight = new IntegerValue(40);
+    public IntegerValue volcanoWidth = new IntegerValue(40);
     public IntegerValue volcanoNum = new IntegerValue(10);
     public IntegerValue volcanoGrowTick = new IntegerValue(60);
     public IntegerValue volcanoStartRange = new IntegerValue(15);

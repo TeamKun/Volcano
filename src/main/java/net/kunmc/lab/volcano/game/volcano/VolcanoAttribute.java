@@ -39,10 +39,10 @@ public class VolcanoAttribute {
     }
 
     public int getMaxHeight() {
-        return Volcano.getPlugin().config.volcanoHeight.value();
+        return 40;
     }
 
-    public int getMaxWeight() {
-        return Volcano.getPlugin().config.volcanoWeight.value();
+    public int getMaxWidth() {
+        return Volcano.getPlugin().config.volcanoWidth.value();
     }
 }
